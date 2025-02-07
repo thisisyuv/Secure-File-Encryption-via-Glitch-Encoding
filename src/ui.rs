@@ -16,19 +16,19 @@ pub async fn enrich_arguments(args: Option<Commands>) -> anyhow::Result<Commands
             Commands::Dislodge(enrich_dislodge_params(dislodge_args).await?)
         }
         None => {
-            let options = vec!["Embed", "Download", "Dislodge"];
+            let options = vec!["Encrypt", "Download", "Decrypt"];
 
-            let modes = Select::new("Pick what you want to do with the program", options)
-                .with_help_message("Embed: Create a video from files,\n Download: Download files stored on YouTube,\n Dislodge: Return files from an embedded video")
+            let modes = Select::new("Choose One", options)
+                .with_help_message("Encrypt: Encrypt any file into a video,\n Download: Download files stored on YouTube,\n Decrypt: Return files from an encrypted video")
                 .prompt()
                 .unwrap();
 
             match modes {
-                "Embed" => Commands::Embed(enrich_embed_params(EmbedParams::default()).await?),
+                "Encrypt" => Commands::Embed(enrich_embed_params(EmbedParams::default()).await?),
                 "Download" => {
                     Commands::Download(enrich_download_params(DownloadParams::default()).await?)
                 }
-                "Dislodge" => {
+                "Decrypt" => {
                     Commands::Dislodge(enrich_dislodge_params(DislodgeParams::default()).await?)
                 }
                 _ => unreachable!(),
@@ -39,17 +39,13 @@ pub async fn enrich_arguments(args: Option<Commands>) -> anyhow::Result<Commands
 
 async fn enrich_embed_params(mut args: EmbedParams) -> anyhow::Result<EmbedParams> {
     if args.in_path.is_none() {
-        let path = Text::new("What is the path to your file ?")
+        let path = Text::new("Enter the path of your file :")
             .with_default("src/tests/test.txt")
             .prompt()
             .unwrap();
         args.in_path = Some(path);
     }
 
-    
-
-    println!("\nI couldn't figure out a weird bug that happens if you set the size to something that isn't a factor of the height");
-    println!("If you don't want the files you put in to come out as the audio/visual equivalent of a pipe bomb, account for the above bug\n");
     
     if args.mode.is_none()
         && args.block_size.is_none()
@@ -89,7 +85,7 @@ async fn enrich_embed_params(mut args: EmbedParams) -> anyhow::Result<EmbedParam
     if args.mode.is_none() {
         let out_modes = vec!["Colored", "B/W (Binary)"];
         let out_mode = Select::new("Pick how data will be embedded", out_modes.clone())
-            .with_help_message("Colored mode is useless if the video undergoes compression at any point, B/W survives compression")
+            .with_help_message("Colored mode is useless.")
             .prompt()
             .unwrap();
         args.mode = Some(match out_mode {
@@ -118,7 +114,7 @@ async fn enrich_embed_params(mut args: EmbedParams) -> anyhow::Result<EmbedParam
     }
 
     if args.fps.is_none() {
-        let fps = CustomType::<i32>::new("What fps should the video be at ?")
+        let fps = CustomType::<i32>::new("Enter the fps :")
             .with_error_message("Please type a valid number")
             .with_help_message("Decreasing fps may decrease chance of compression. ~10fps works")
             .with_default(10)
@@ -131,8 +127,8 @@ async fn enrich_embed_params(mut args: EmbedParams) -> anyhow::Result<EmbedParam
 
     if args.resolution.is_none() {
         
-        let resolution = Select::new("Pick a resolution", resolutions)
-            .with_help_message("I recommend 720p as the resolution won't affect compression")
+        let resolution = Select::new("Select a resolution", resolutions)
+            .with_help_message("Recommended 720p, as the resolution won't affect compression")
             .prompt()
             .unwrap();
         args.resolution = Some(resolution.to_string());
@@ -143,7 +139,7 @@ async fn enrich_embed_params(mut args: EmbedParams) -> anyhow::Result<EmbedParam
 
 async fn enrich_download_params(mut args: DownloadParams) -> anyhow::Result<DownloadParams> {
     if args.url.is_none() {
-        let url = Text::new("What is the url to the video ?")
+        let url = Text::new("Enter the url of th video :")
             .prompt()
             .unwrap();
         args.url = Some(url);
@@ -154,7 +150,7 @@ async fn enrich_download_params(mut args: DownloadParams) -> anyhow::Result<Down
 
 async fn enrich_dislodge_params(mut args: DislodgeParams) -> anyhow::Result<DislodgeParams> {
     if args.in_path.is_none() {
-        let in_path = Text::new("What is the path to your video ?")
+        let in_path = Text::new("Enter the path of the Encrypted video :")
             .with_default("output.avi")
             .prompt()
             .unwrap();
@@ -162,7 +158,7 @@ async fn enrich_dislodge_params(mut args: DislodgeParams) -> anyhow::Result<Disl
     }
 
     if args.out_path.is_none() {
-        let out_path = Text::new("Where should the output go ?")
+        let out_path = Text::new("Output destination path :")
             .with_help_message("Please include name of file and extension")
             .prompt()
             .unwrap();
