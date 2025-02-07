@@ -14,7 +14,7 @@ use crate::args::Arguments;
 //Make it calculate how much data is jammed in 1 frame for user
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("Welcome to SFE (Secure File Encryption)");
+    println!("Secure File Encryption.");
     println!("This tool allows you to encrypt any file into a compression-resistant video.");
     println!("\nHow to use:");
     println!("1. Zip all the files you will be uploading");
