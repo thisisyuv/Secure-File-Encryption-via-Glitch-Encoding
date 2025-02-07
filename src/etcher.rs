@@ -544,7 +544,7 @@ pub fn etch(path: &str, data: Data, settings: Settings) -> anyhow::Result<()> {
     }
     video.release()?;
 
-    println!("Video embedded successfully at {}", path);
+    println!("Video encrypted successfully at {}", path);
 
     return Ok(());
 }
