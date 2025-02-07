@@ -33,7 +33,6 @@ impl EmbedSource {
         let height = image.rows();
         let frame_size = Size::new(width, height);
         
-        //Some malevolent spirit breaks data when height is not divisible
         if height % size != 0 && !(instruction) {
             return Err("Image size is not a multiple of the embedding size".to_string());
         }
