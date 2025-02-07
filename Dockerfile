@@ -18,10 +18,10 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set the working directory 
-WORKDIR /home/Infinite-Storage-Glitch
+WORKDIR /home/Secure-File-Encryption-via-Glitch-Encoding
 
 # Set cargo home to a folder in the working directory this will make rebuild 
 # faster as it allows the cargo cache to be saved between docker runs. 
-ENV CARGO_HOME=/home/Infinite-Storage-Glitch/cargo_home
+ENV CARGO_HOME=/home/Secure-File-Encryption-via-Glitch-Encoding
 
 CMD ["/bin/bash"]
